@@ -2,21 +2,34 @@ import * as React from "react";
 import {
   Web3ReactProvider,
   useWeb3React,
-  UnsupportedChainIdError,
+  UnsupportedChainIdError
 } from "@web3-react/core";
 import {
   NoEthereumProviderError,
-  UserRejectedRequestError as UserRejectedRequestErrorInjected,
+  UserRejectedRequestError as UserRejectedRequestErrorInjected
 } from "@web3-react/injected-connector";
 import {
   URI_AVAILABLE,
-  UserRejectedRequestError as UserRejectedRequestErrorWalletConnect,
+  UserRejectedRequestError as UserRejectedRequestErrorWalletConnect
 } from "@web3-react/walletconnect-connector";
 import { UserRejectedRequestError as UserRejectedRequestErrorFrame } from "@web3-react/frame-connector";
 import { Web3Provider } from "@ethersproject/providers";
 import { formatEther } from "@ethersproject/units";
 
-import { injected, network, walletconnect, walletlink } from "./connectors";
+import {
+  injected,
+  network,
+  walletconnect,
+  walletlink,
+  ledger,
+  trezor,
+  frame,
+  fortmatic,
+  portis,
+  squarelink,
+  torus,
+  authereum
+} from "./connectors";
 import { useEagerConnect, useInactiveListener } from "./hooks";
 import { Spinner } from "./Spinner";
 
@@ -24,7 +37,15 @@ const connectorsByName = {
   Injected: injected,
   Network: network,
   WalletConnect: walletconnect,
-  WalletLink: walletlink
+  WalletLink: walletlink,
+  Ledger: ledger,
+  Trezor: trezor,
+  Frame: frame,
+  Fortmatic: fortmatic,
+  Portis: portis,
+  Squarelink: squarelink,
+  Torus: torus,
+  Authereum: authereum
 };
 
 function getErrorMessage(error) {
@@ -68,13 +89,13 @@ function MyComponent() {
     activate,
     deactivate,
     active,
-    error,
+    error
   } = context;
 
   // handle logic to recognize the connector currently being activated
   const [activatingConnector, setActivatingConnector] = React.useState();
   React.useEffect(() => {
-    console.log("running");
+    console.log('running')
     if (activatingConnector && activatingConnector === connector) {
       setActivatingConnector(undefined);
     }
@@ -89,14 +110,14 @@ function MyComponent() {
   // set up block listener
   const [blockNumber, setBlockNumber] = React.useState();
   React.useEffect(() => {
-    console.log("running");
+    console.log('running')
     if (library) {
       let stale = false;
 
-      console.log("fetching block number!!");
+      console.log('fetching block number!!')
       library
         .getBlockNumber()
-        .then((blockNumber) => {
+        .then(blockNumber => {
           if (!stale) {
             setBlockNumber(blockNumber);
           }
@@ -107,7 +128,7 @@ function MyComponent() {
           }
         });
 
-      const updateBlockNumber = (blockNumber) => {
+      const updateBlockNumber = blockNumber => {
         setBlockNumber(blockNumber);
       };
       library.on("block", updateBlockNumber);
@@ -123,13 +144,13 @@ function MyComponent() {
   // fetch eth balance of the connected account
   const [ethBalance, setEthBalance] = React.useState();
   React.useEffect(() => {
-    console.log("running");
+    console.log('running')
     if (library && account) {
       let stale = false;
 
       library
         .getBalance(account)
-        .then((balance) => {
+        .then(balance => {
           if (!stale) {
             setEthBalance(balance);
           }
@@ -149,8 +170,8 @@ function MyComponent() {
 
   // log the walletconnect URI
   React.useEffect(() => {
-    console.log("running");
-    const logURI = (uri) => {
+    console.log('running')
+    const logURI = uri => {
       console.log("WalletConnect URI", uri);
     };
     walletconnect.on(URI_AVAILABLE, logURI);
@@ -172,7 +193,7 @@ function MyComponent() {
           gridTemplateColumns: "1fr min-content 1fr",
           maxWidth: "20rem",
           lineHeight: "2rem",
-          margin: "auto",
+          margin: "auto"
         }}
       >
         <span>Chain Id</span>
@@ -226,10 +247,10 @@ function MyComponent() {
           gridGap: "1rem",
           gridTemplateColumns: "1fr 1fr",
           maxWidth: "20rem",
-          margin: "auto",
+          margin: "auto"
         }}
       >
-        {Object.keys(connectorsByName).map((name) => {
+        {Object.keys(connectorsByName).map(name => {
           const currentConnector = connectorsByName[name];
           const activating = currentConnector === activatingConnector;
           const connected = currentConnector === connector;
@@ -247,7 +268,7 @@ function MyComponent() {
                   ? "green"
                   : "unset",
                 cursor: disabled ? "unset" : "pointer",
-                position: "relative",
+                position: "relative"
               }}
               disabled={disabled}
               key={name}
@@ -265,7 +286,7 @@ function MyComponent() {
                   display: "flex",
                   alignItems: "center",
                   color: "black",
-                  margin: "0 0 0 1rem",
+                  margin: "0 0 0 1rem"
                 }}
               >
                 {activating && (
@@ -289,7 +310,7 @@ function MyComponent() {
         style={{
           display: "flex",
           flexDirection: "column",
-          alignItems: "center",
+          alignItems: "center"
         }}
       >
         {(active || error) && (
@@ -299,7 +320,7 @@ function MyComponent() {
               marginTop: "2rem",
               borderRadius: "1rem",
               borderColor: "red",
-              cursor: "pointer",
+              cursor: "pointer"
             }}
             onClick={() => {
               deactivate();
@@ -324,7 +345,7 @@ function MyComponent() {
           gridGap: "1rem",
           gridTemplateColumns: "fit-content",
           maxWidth: "20rem",
-          margin: "auto",
+          margin: "auto"
         }}
       >
         {!!(library && account) && (
@@ -332,16 +353,16 @@ function MyComponent() {
             style={{
               height: "3rem",
               borderRadius: "1rem",
-              cursor: "pointer",
+              cursor: "pointer"
             }}
             onClick={() => {
               library
                 .getSigner(account)
                 .signMessage("👋")
-                .then((signature) => {
+                .then(signature => {
                   window.alert(`Success!\n\n${signature}`);
                 })
-                .catch((error) => {
+                .catch(error => {
                   window.alert(
                     "Failure!" +
                       (error && error.message ? `\n\n${error.message}` : "")
@@ -357,7 +378,7 @@ function MyComponent() {
             style={{
               height: "3rem",
               borderRadius: "1rem",
-              cursor: "pointer",
+              cursor: "pointer"
             }}
             onClick={() => {
               connector.changeChainId(chainId === 1 ? 4 : 1);
@@ -371,13 +392,71 @@ function MyComponent() {
             style={{
               height: "3rem",
               borderRadius: "1rem",
-              cursor: "pointer",
+              cursor: "pointer"
             }}
             onClick={() => {
               connector.close();
             }}
           >
             Kill WalletConnect Session
+          </button>
+        )}
+        {connector === fortmatic && (
+          <button
+            style={{
+              height: "3rem",
+              borderRadius: "1rem",
+              cursor: "pointer"
+            }}
+            onClick={() => {
+              connector.close();
+            }}
+          >
+            Kill Fortmatic Session
+          </button>
+        )}
+        {connector === portis && (
+          <>
+            {chainId !== undefined && (
+              <button
+                style={{
+                  height: "3rem",
+                  borderRadius: "1rem",
+                  cursor: "pointer"
+                }}
+                onClick={() => {
+                  connector.changeNetwork(chainId === 1 ? 100 : 1);
+                }}
+              >
+                Switch Networks
+              </button>
+            )}
+            <button
+              style={{
+                height: "3rem",
+                borderRadius: "1rem",
+                cursor: "pointer"
+              }}
+              onClick={() => {
+                connector.close();
+              }}
+            >
+              Kill Portis Session
+            </button>
+          </>
+        )}
+        {connector === torus && (
+          <button
+            style={{
+              height: "3rem",
+              borderRadius: "1rem",
+              cursor: "pointer"
+            }}
+            onClick={() => {
+              connector.close();
+            }}
+          >
+            Kill Torus Session
           </button>
         )}
       </div>
