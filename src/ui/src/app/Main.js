@@ -19,6 +19,7 @@ import { formatEther } from "@ethersproject/units";
 import { injected, network, walletconnect, walletlink } from "./connectors";
 import { useEagerConnect, useInactiveListener } from "./hooks";
 import { Spinner } from "./Spinner";
+import PublishPanel from './PublishPanel/PublishPanel'
 
 const connectorsByName = {
   Injected: injected,
@@ -381,6 +382,8 @@ function MyComponent() {
           </button>
         )}
       </div>
+
+      <PublishPanel />
     </div>
   );
 }
