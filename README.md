@@ -5,18 +5,8 @@
 ```
 --- UI
 cd src/ui
-npx snowpack dev
-
---- Backend
-TBD
-```
-
-### Build
-
-```
---- UI
-cd src/ui
-npx snowpack build
+yarn
+yarn start
 
 --- Backend
 TBD
