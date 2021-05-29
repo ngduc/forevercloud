@@ -3,6 +3,7 @@ import random
 import string
 import subprocess
 import shlex
+import json
 
 import web3
 
@@ -14,11 +15,12 @@ STORAGE_PATH = '/root/hackathon/storage'
 CMD_HUB_BK_CAT = 'hub buck cat'
 CMD_HUB_BK_PUSH = 'hub buck push -y'
 CMD_HUB_BK_LS = 'hub buck ls'
+CMD_HUB_BK_LINK = 'hub buck link'
 
 
 def _execute_shell_cmd(cmd):
     env = os.environ
-    env["PATH"] += ':' + '/usr/local/bin/:/bin'
+    env["PATH"] += ':' + '/usr/local/bin/:/bin:/usr/bin'
     proc = subprocess.Popen(shlex.split(cmd), \
                             stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                             cwd=STORAGE_PATH, env=env)
@@ -33,17 +35,19 @@ def gen_id(N=5):
       
         
 def read_data_remote(filename):
-    return _execute_shell_cmd('%s %s'%(CMD_HUB_BK_CAT, filename))
+    return _execute_shell_cmd('%s %s.html'%(CMD_HUB_BK_CAT, filename))
 
 
 def hub_list(filename):
-    return _execute_shell_cmd('%s %s'%(CMD_HUB_BK_LS, filename))
+    return _execute_shell_cmd('%s %s.html'%(CMD_HUB_BK_LS, filename))
 
     
 def hub_push():
     return _execute_shell_cmd(CMD_HUB_BK_PUSH)
 
-
+def hub_link(filename):
+    return _execute_shell_cmd('%s %s.html'%(CMD_HUB_BK_LINK, filename))
+    
 def key_exist(key):
     ret, out = hub_list(key)
     if ret == 0:
@@ -66,14 +70,14 @@ def write_data(data, key=None, retries=5):
     if not key:
         return 'failed to create data', None
     
-    with open('%s/%s'%(STORAGE_PATH, key), 'w') as f:
+    with open('%s/%s.html'%(STORAGE_PATH, key), 'w') as f:
         f.write(data)
     
     return None, key
     
 
 def read_data_local(filename):
-    with open('%s/%s'%(STORAGE_PATH, filename)) as f:
+    with open('%s/%s.html'%(STORAGE_PATH, filename)) as f:
         return f.read()
 
 def eth_get_transaction(transaction_id):
@@ -95,3 +99,22 @@ def update_record(transaction_id):
     filename = os.path.dirname(os.path.abspath(__file__)) + '/' + RECORD_FILE
     with open(filename,'a') as f:
         f.write(' ' + transaction_id)
+        
+def request_url_embeded(url):
+    filename = os.path.dirname(os.path.abspath(__file__)) + '/api.key'
+    api_key = None
+    with open(filename) as f:
+        api_key = json.load(f).get('embeded')
+    if not api_key:
+        return 'No api key available', None
+    cmd = 'curl -s -H "x-api-key:%s" https://api.embed.rocks/api?url=%s'%(api_key, url)
+    print (cmd)
+    ret, out = _execute_shell_cmd(cmd)
+    print (ret, out)
+    if ret != 0:
+        return 'Error calling end point', None
+    data = json.loads(out)
+    if data.get('type') == 'error':
+        return data.get('msg'), None
+    return None, data
+    

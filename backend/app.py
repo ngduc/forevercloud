@@ -1,6 +1,8 @@
 import os
-import libs
+import re
 import logging
+
+import libs
 
 from flask import Flask, render_template, url_for, redirect, jsonify, request, Response, render_template
 
@@ -35,9 +37,9 @@ def publish():
             return jsonify(dict(status='error', error='missing account information'))        
         
         #verify transactionId vs records
-        if libs.record_exist(data.get('transactionId')):
-            return jsonify(dict(status='error', error='transaction %s already exists'%data.get('transactionId')))
-        libs.update_record(data.get('transactionId'))
+        #if libs.record_exist(data.get('transactionId')):
+        #    return jsonify(dict(status='error', error='transaction %s already exists'%data.get('transactionId')))
+        #libs.update_record(data.get('transactionId'))
         
         #verify transaction
         err, receipt = libs.eth_get_transaction(data.get('transactionId'))
@@ -55,6 +57,8 @@ def publish():
             return jsonify(dict(status='error', error='Transaction is not completed'))
 
         key = data.get('key')
+        if not key and data.get('transactionId'):
+            key = data.get('transactionId')[-8:]
         if request.method == 'PUT' and not key:
             return jsonify(dict(status='error', error='no key provided for update'))
             
@@ -71,8 +75,18 @@ def publish():
 
         if ret != 0:
             return jsonify(dict(status='error', error='push data to blockchain network failed'))
-
-        return jsonify(dict(status='ok', error=None, key=key))
+        
+        # get hub link
+        ret, out = libs.hub_link(key)
+        app.logger.debug('ret: %s, out: %s', ret, out)
+        
+        url = None
+        if ret == 0:
+            match = re.search('https://\S+\.textile\.space/%s\.html'%key, out.decode("utf-8"))
+            if match:
+                url = match.group(0)
+        
+        return jsonify(dict(status='ok', error=None, key=key, url=url))
 
     except:
         app.logger.error('exception not handled', exc_info=True)
@@ -111,7 +125,25 @@ def retrieve():
         r.data = 'Error: unknown error'
         return r
     
+@app.route('/api/import', methods=['POST'])
+def import_url():
+    try:
+        data = request.get_json()
+        app.logger.debug('data: %s', data)
 
+        if not data:
+            return jsonify(dict(status='error', error='invalid request data'))
+        url = data.get('url')
+        if not url:
+            return jsonify(dict(status='error', error='no URL provided'))
+        err, out = libs.request_url_embeded(url)
+        if err:
+            app.logger.error(err)
+            return jsonify(dict(status='error', error=err))
+        return jsonify(dict(status='ok', error=None, html=out.get('html'), title=out.get('title')))
+    except: 
+        app.logger.error('exception not handled', exc_info=True)
+        return jsonify(dict(status='error', error='exception not handled'))
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5001, debug=True)
