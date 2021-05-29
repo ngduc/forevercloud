@@ -235,7 +235,7 @@ function MyComponent() {
                   });
                 }}
               >
-                Send Payment
+                ➤ Send Payment
               </Button>
             )}
             
