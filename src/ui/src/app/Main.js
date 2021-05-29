@@ -166,10 +166,7 @@ function MyComponent() {
   const walletConnected = injectedConnector === connector;
 
   return (
-    <div style={{ padding: "1rem" }}>
-      <h1 style={{ margin: "0", textAlign: "right" }}>
-        {active ? "🟢" : error ? "🔴" : "🟠"}
-      </h1>
+    <div className="ml-2 mt-4">
       <h3>
         {/* <span>Chain Id</span>
         <span role="img" aria-label="chain">
@@ -225,6 +222,7 @@ function MyComponent() {
                 Connect MetaMask
               </Button>
             )}
+            <span>{active ? "🟢" : error ? "🔴" : "🟠"}</span>
           </div>
         </div>
       </h3>
