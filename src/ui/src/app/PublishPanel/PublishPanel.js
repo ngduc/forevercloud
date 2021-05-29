@@ -2,6 +2,7 @@ import * as React from 'react';
 import Button from '../../components/Button';
 import { Spinner } from '../../components/Base';
 import WebImport from './WebImport';
+import { BASE_URL } from '../../utils/envUtil';
 
 import { Editor } from '@toast-ui/react-editor';
 import 'codemirror/lib/codemirror.css';
@@ -11,6 +12,8 @@ export default function PublishPanel({ account, transactionId }) {
   const [content, setContent] = React.useState('');
   const [submitting, setSubmitting] = React.useState(false);
   const [importing, setImporting] = React.useState(false);
+  const [publishedData, setPublishedData] = React.useState(null);
+
   const editorRef = React.createRef();
 
   // React.useEffect(() => {
@@ -25,7 +28,7 @@ export default function PublishPanel({ account, transactionId }) {
       const html = editorRef?.current?.getInstance().getHtml();
 
       setSubmitting(true);
-      const res = await fetch('http://209.182.218.3:5000/api/publish', {
+      const res = await fetch(`${BASE_URL}/api/publish`, {
         method: 'POST', // or 'PUT'
         headers: {
           'Content-Type': 'application/json'
@@ -36,8 +39,10 @@ export default function PublishPanel({ account, transactionId }) {
           content: html
         })
       });
-      console.log('res', res);
-      alert('Response: ', JSON.stringify(res));
+      const { key, url } = await res.json();
+      if (key && url) {
+        setPublishedData({ key, url })
+      }
     } catch (err) {
       alert('Unable to post data. ', JSON.stringify(err));
     }
@@ -95,6 +100,12 @@ export default function PublishPanel({ account, transactionId }) {
           <div>1. Connect to your MetaMask Wallet.</div>
           <div>2. Click Send Payment button.</div>
           <div>3. Paste your content and click Publish.</div>
+        </div>
+      )}
+      {publishedData && (
+        <div>
+          <input className="border border-gray-200 p-2 w-1/3" value={`${window.location.href}page/${publishedData?.key}`} />
+          <input className="border border-gray-200 p-2 w-1/3 ml-2" value={publishedData?.url} />
         </div>
       )}
     </div>

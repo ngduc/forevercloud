@@ -1,10 +1,12 @@
 import * as React from 'react';
 import Button from '../../components/Button';
 import { Spinner } from '../../components/Base';
+import { BASE_URL } from '../../utils/envUtil'
 
 export default ({ importHandler }) => {
   const [url, setUrl] = React.useState('');
   const [submitting, setSubmitting] = React.useState(false);
+
   return (
     <div className="flex flex-row items-center">
       {submitting && <Spinner />}
@@ -18,7 +20,7 @@ export default ({ importHandler }) => {
       <Button
         onClick={async () => {
           setSubmitting(true);
-          const res = await fetch('http://209.182.218.3:5000/api/import', {
+          const res = await fetch(`${BASE_URL}/api/import`, {
             method: 'POST', // or 'PUT'
             headers: {
               'Content-Type': 'application/json'
