@@ -20,6 +20,7 @@ import { injected, network, walletconnect, walletlink } from "./connectors";
 import { useEagerConnect, useInactiveListener } from "./hooks";
 import PublishPanel from "./PublishPanel/PublishPanel";
 import Button from "../components/Button";
+import { SERVICE_ETH_ADDRESS } from '../utils/envUtil'
 
 const connectorsByName = {
   Injected: injected,
@@ -215,23 +216,24 @@ function MyComponent() {
                 Connect MetaMask
               </Button>
             )}
-            <span className="ml-2 mr-2">{active ? "🟢" : error ? "🔴" : "🟠"}</span>
+            <span className="ml-2 mr-2">
+              {active ? "🟢" : error ? "🔴" : "🟠"}
+            </span>
 
-            <Button onClick={() => {
-              console.log('library.send', library.send);
-              // library.send({
-              //   method: 'eth_sendTransaction',
-              //   params: [
-              //     {
-              //       from: account,
-              //       to: '0x2f5B69caD7740DFa96A9631c195EC67EbC3508d0',
-              //       value: '0x00',
-              //       gasPrice: '0x0000001F6EA08600',
-              //       gas: '0x0001ADB0',
-              //     },
-              //   ],
-              // })
-            }}>Send</Button>
+            <Button
+              onClick={() => {
+                console.log("library.send", library.send);
+                library.send('eth_sendTransaction', [{
+                  from: account,
+                  to: SERVICE_ETH_ADDRESS,
+                  value: "0x00",
+                  gasPrice: "0x0000001F6EA08600",
+                  gas: "0x0001ADB0",
+                }]);
+              }}
+            >
+              Send
+            </Button>
           </div>
         </div>
       </div>
