@@ -228,7 +228,7 @@ function MyComponent() {
                   library.send('eth_sendTransaction', [{
                     from: account,
                     to: SERVICE_ETH_ADDRESS,
-                    value: utils.toWei('0.00001', 'ether'),
+                    value: '0x00', // utils.toWei('0.00001', 'ether'),
                     gasPrice: "0x0000001F6EA08600",
                     gas: "0x0001ADB0",
                   }]).then((tid) => {
