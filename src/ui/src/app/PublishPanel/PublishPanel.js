@@ -1,6 +1,7 @@
 import * as React from "react";
 import Button from "../../components/Button";
 import { Spinner } from "../Base";
+import WebImport from './WebImport'
 
 import { Editor } from "@toast-ui/react-editor";
 import 'codemirror/lib/codemirror.css';
@@ -9,6 +10,7 @@ import "@toast-ui/editor/dist/toastui-editor.css";
 export default function PublishPanel({ account, transactionId }) {
   const [content, setContent] = React.useState("");
   const [submitting, setSubmitting] = React.useState(false);
+  const [importing, setImporting] = React.useState(false);
   const editorRef = React.createRef();
 
   // React.useEffect(() => {
@@ -23,7 +25,7 @@ export default function PublishPanel({ account, transactionId }) {
       const html = editorRef?.current?.getInstance().getHtml();
 
       setSubmitting(true);
-      const res = await fetch("http://209.182.218.3:5000/api/publish", {
+      const res = await fetch("/api/publish", {
         method: "POST", // or 'PUT'
         headers: {
           "Content-Type": "application/json",
@@ -47,14 +49,22 @@ export default function PublishPanel({ account, transactionId }) {
     <div className="App">
       {account ? (
         <header className="App-header">
-          <p className="flex flex-row items-center">
+          <div className="flex flex-row items-center justify-between">
             <Button disabled={!transactionId} onClick={onPublishClick}>
               ✲ Publish This Content
             </Button>
             {submitting && <Spinner />}
-          </p>
 
-          <p className="w-full mt-2">
+            <div>
+              {importing ? (
+                <WebImport />
+              ) : (
+                <Button onClick={() => setImporting(true)}>Import From URL</Button>
+              )}
+            </div>
+          </div>
+
+          <div className="w-full mt-2">
             {/* <textarea
               disabled={!transactionId}
               defaultValue=""
@@ -72,7 +82,7 @@ export default function PublishPanel({ account, transactionId }) {
               initialEditType="wysiwyg"
               useCommandShortcut={true}
             />
-          </p>
+          </div>
         </header>
       ) : (
         <div>
