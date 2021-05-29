@@ -31,7 +31,7 @@ jobs:
 
       # Runs a set of commands using the runners shell - CI=false to ignore lint errors
       - name: build
-        run: CI=false cd ./src/ui && yarn build
+        run: cd ./src/ui && CI=false yarn build
 
       - uses: montudor/action-zip@v1
         with:
