@@ -41,7 +41,7 @@ export default function PublishPanel({ account, transactionId }) {
       });
       const { key, url } = await res.json();
       if (key && url) {
-        setPublishedData({ key, url })
+        setPublishedData({ key, url });
       }
     } catch (err) {
       alert('Unable to post data. ', JSON.stringify(err));
@@ -54,26 +54,6 @@ export default function PublishPanel({ account, transactionId }) {
     <div className="App">
       {account ? (
         <header className="App-header">
-          <div className="flex flex-row items-center justify-between">
-            <Button disabled={!transactionId} onClick={onPublishClick}>
-              ✲ Publish This Content
-            </Button>
-            {submitting && <Spinner />}
-
-            <div>
-              {importing ? (
-                <WebImport
-                  importHandler={(html) => {
-                    const editorInstance = editorRef.current.getInstance();
-                    editorInstance.setHtml(html);
-                  }}
-                />
-              ) : (
-                <Button onClick={() => setImporting(true)}>Import From URL</Button>
-              )}
-            </div>
-          </div>
-
           <div className="w-full mt-2">
             {/* <textarea
               disabled={!transactionId}
@@ -88,23 +68,49 @@ export default function PublishPanel({ account, transactionId }) {
               initialValue={''}
               placeholder={'Your content...'}
               previewStyle="vertical"
-              height="700px"
+              height="calc(100vh - 200px)"
               initialEditType="wysiwyg"
               useCommandShortcut={true}
             />
           </div>
         </header>
       ) : (
-        <div>
+        <div className="m-4 space-y-4">
           <h3>How to Publish your content to Blockchain?</h3>
           <div>1. Connect to your MetaMask Wallet.</div>
           <div>2. Click Send Payment button.</div>
-          <div>3. Paste your content and click Publish.</div>
+          <div>3. Type or Paste your content and click Publish.</div>
         </div>
       )}
+
+      {account && (
+        <div className="mt-2 flex flex-row items-center justify-between">
+          <Button disabled={!transactionId} onClick={onPublishClick}>
+            ✲ Publish This Content
+          </Button>
+          {submitting && <Spinner />}
+
+          <div>
+            {importing ? (
+              <WebImport
+                importHandler={(html) => {
+                  const editorInstance = editorRef.current.getInstance();
+                  editorInstance.setHtml(html);
+                }}
+              />
+            ) : (
+              <Button onClick={() => setImporting(true)}>Import From URL</Button>
+            )}
+          </div>
+        </div>
+      )}
+
       {publishedData && (
         <div>
-          <input className="border border-gray-200 p-2 w-1/3" value={`${window.location.href}page/${publishedData?.key}`} />
+          <input
+            className="border border-gray-200 p-2 w-1/3"
+            value={`${window.location.href}page/${publishedData?.key}`}
+          />
           <input className="border border-gray-200 p-2 w-1/3 ml-2" value={publishedData?.url} />
         </div>
       )}

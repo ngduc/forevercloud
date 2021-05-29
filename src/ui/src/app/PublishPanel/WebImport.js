@@ -18,7 +18,11 @@ export default ({ importHandler }) => {
         style={{ width: 400 }}
       />
       <Button
+        disabled={submitting}
         onClick={async () => {
+          if (!url.trim()) {
+            return;
+          }
           setSubmitting(true);
           const res = await fetch(`${BASE_URL}/api/import`, {
             method: 'POST', // or 'PUT'

@@ -157,75 +157,81 @@ function MyComponent() {
   return (
     <div className="ml-2 mt-4">
       <div>
-        <div className="flex flex-row">
-          <div className="mt-2">
-            <span className="text-xs bg-gray-200 p-2 mr-2 border rounded">Account</span>
-            <span>
-              {account === undefined
-                ? ' N/A'
-                : account === null
-                ? 'None'
-                : `${account.substring(0, 6)}...${account.substring(account.length - 4)}`}
-            </span>
-          </div>
-          <div className="ml-4 mt-2">
-            <span className="text-xs bg-gray-200 p-2 mr-2 border rounded">Balance</span>
-            <span>
-              {ethBalance === undefined
-                ? ' N/A'
-                : ethBalance === null
-                ? 'Error'
-                : `Ξ ${parseFloat(formatEther(ethBalance)).toPrecision(4)}`}
-            </span>
+        <div className="flex flex-row justify-between">
+          <div className="w-100">
+            <img src="logo-text.png" style={{ height: 64 }} />
           </div>
 
-          <div className="ml-4">
-            {walletConnected ? (
-              <Button
-                onClick={() => {
-                  deactivate();
-                }}
-              >
-                Disconnect MetaMask
-              </Button>
-            ) : (
-              <Button
-                onClick={() => {
-                  const connector = connectorsByName['Injected'];
-                  setActivatingConnector(connector);
-                  activate(connector);
-                }}
-              >
-                Connect MetaMask
-              </Button>
-            )}
-            <span className="ml-2 mr-2">{active ? '🟢' : error ? '🔴' : '🟠'}</span>
+          <div className="flex flex-row">
+            <div className="mt-2">
+              <span className="text-xs bg-gray-200 p-2 mr-2 border rounded">Account</span>
+              <span>
+                {account === undefined
+                  ? ' N/A'
+                  : account === null
+                  ? 'None'
+                  : `${account.substring(0, 6)}...${account.substring(account.length - 4)}`}
+              </span>
+            </div>
+            <div className="ml-4 mt-2">
+              <span className="text-xs bg-gray-200 p-2 mr-2 border rounded">Balance</span>
+              <span>
+                {ethBalance === undefined
+                  ? ' N/A'
+                  : ethBalance === null
+                  ? 'Error'
+                  : `Ξ ${parseFloat(formatEther(ethBalance)).toPrecision(4)}`}
+              </span>
+            </div>
 
-            {walletConnected && (
-              <Button
-                onClick={() => {
-                  library
-                    .send('eth_sendTransaction', [
-                      {
-                        from: account,
-                        to: SERVICE_ETH_ADDRESS,
-                        value: '0x00', // utils.toWei('0.00001', 'ether'),
-                        gasPrice: '0x0000001F6EA08600',
-                        gas: '0x0001ADB0'
-                      }
-                    ])
-                    .then((tid) => {
-                      setTransactionId(tid);
-                    });
-                }}
-              >
-                ➤ Send Payment
-              </Button>
-            )}
+            <div className="ml-4">
+              {walletConnected ? (
+                <Button
+                  onClick={() => {
+                    deactivate();
+                  }}
+                >
+                  Disconnect MetaMask
+                </Button>
+              ) : (
+                <Button
+                  onClick={() => {
+                    const connector = connectorsByName['Injected'];
+                    setActivatingConnector(connector);
+                    activate(connector);
+                  }}
+                >
+                  Connect MetaMask
+                </Button>
+              )}
+              <span className="ml-2 mr-2">{active ? '🟢' : error ? '🔴' : '🟠'}</span>
+
+              {walletConnected && (
+                <Button
+                  onClick={() => {
+                    library
+                      .send('eth_sendTransaction', [
+                        {
+                          from: account,
+                          to: SERVICE_ETH_ADDRESS,
+                          value: '0x00', // utils.toWei('0.00001', 'ether'),
+                          gasPrice: '0x0000001F6EA08600',
+                          gas: '0x0001ADB0'
+                        }
+                      ])
+                      .then((tid) => {
+                        setTransactionId(tid);
+                      });
+                  }}
+                >
+                  ➤ Send Payment
+                </Button>
+              )}
+            </div>
           </div>
         </div>
       </div>
-      <hr className="my-4" />
+      {/* <hr className="my-4" /> */}
 
       <PublishPanel account={account} transactionId={transactionId} />
 
