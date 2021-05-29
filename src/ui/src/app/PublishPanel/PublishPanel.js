@@ -35,7 +35,7 @@ export default function PublishPanel({}) {
             {submitting && <Spinner />}
           </p>
   
-          <p className="w-full">
+          <p className="w-full mt-2">
             <textarea defaultValue="Hello World" onChange={(ev) => setContent(ev.target.value)} className="w-full border-gray-300 border rounded text-sm text-gray-700 p-2" />
           </p>
           

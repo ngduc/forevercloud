@@ -1,3 +1,8 @@
+body {
+  padding: 0 6px;
+  margin-right: 6px;
+}
+
 textarea {
   height: 70vh; /* TODO: fit textarea vertically */
 }

@@ -222,7 +222,7 @@ function MyComponent() {
                 Connect MetaMask
               </Button>
             )}
-            <span>{active ? "🟢" : error ? "🔴" : "🟠"}</span>
+            <span className="ml-2">{active ? "🟢" : error ? "🔴" : "🟠"}</span>
           </div>
         </div>
       </h3>
