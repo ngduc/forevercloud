@@ -9888,6 +9888,11 @@ loglevel@^1.6.6, loglevel@^1.6.7, loglevel@^1.6.8:
   resolved "https://registry.yarnpkg.com/loglevel/-/loglevel-1.7.1.tgz#005fde2f5e6e47068f935ff28573e125ef72f197"
   integrity sha512-Hesni4s5UkWkwCGJMQGAh71PaLUmKFM60dHvq0zi/vDhhrzuk+4GgNbTXJ12YYQJn6ZKBDNIjYcuQGKudvqrIw==
 
+logrocket@^1.2.2:
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/logrocket/-/logrocket-1.2.2.tgz#3b25396ee17b166b4abb91faaa835e9fdb2bedab"
+  integrity sha512-y6c/w/te7fDei9VonjmXDhJKjFNBb5Loomq0cSSDyJKDngJF4q5S0NFa1PToSAaxUW+ccm3PTKsKXBk+PfrEdA==
+
 looper@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/looper/-/looper-2.0.0.tgz#66cd0c774af3d4fedac53794f742db56da8f09ec"

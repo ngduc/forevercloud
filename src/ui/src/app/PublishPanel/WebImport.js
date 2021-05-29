@@ -16,6 +16,7 @@ export default ({ importHandler }) => {
         placeholder="https://..."
         className="mr-2 border border-gray-200 p-1"
         style={{ width: 400 }}
+        autoFocus={true}
       />
       <Button
         disabled={submitting}

@@ -94,8 +94,10 @@ export default function PublishPanel({ account, transactionId }) {
             {importing ? (
               <WebImport
                 importHandler={(html) => {
-                  const editorInstance = editorRef.current.getInstance();
-                  editorInstance.setHtml(html);
+                  if (editorRef && editorRef.current) {
+                    const editorInstance = editorRef.current.getInstance();
+                    editorInstance.setHtml(html);
+                  }
                 }}
               />
             ) : (
