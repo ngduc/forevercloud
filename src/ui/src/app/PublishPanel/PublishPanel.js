@@ -1,6 +1,6 @@
 import * as React from "react";
 import Button from "../../components/Button";
-import { Spinner } from "../Base";
+import { Spinner } from "../../components/Base";
 import WebImport from './WebImport'
 
 import { Editor } from "@toast-ui/react-editor";
@@ -25,7 +25,7 @@ export default function PublishPanel({ account, transactionId }) {
       const html = editorRef?.current?.getInstance().getHtml();
 
       setSubmitting(true);
-      const res = await fetch("/api/publish", {
+      const res = await fetch("http://209.182.218.3:5000/api/publish", {
         method: "POST", // or 'PUT'
         headers: {
           "Content-Type": "application/json",
@@ -57,7 +57,10 @@ export default function PublishPanel({ account, transactionId }) {
 
             <div>
               {importing ? (
-                <WebImport />
+                <WebImport importHandler={(html) => {
+                  const editorInstance = editorRef.current.getInstance();
+                  editorInstance.setHtml(html);
+                }} />
               ) : (
                 <Button onClick={() => setImporting(true)}>Import From URL</Button>
               )}
