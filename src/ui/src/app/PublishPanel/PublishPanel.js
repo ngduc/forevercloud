@@ -2,12 +2,26 @@ import * as React from "react";
 import Button from "../../components/Button";
 import { Spinner } from "../Base";
 
+import { Editor } from "@toast-ui/react-editor";
+import 'codemirror/lib/codemirror.css';
+import "@toast-ui/editor/dist/toastui-editor.css";
+
 export default function PublishPanel({ account, transactionId }) {
   const [content, setContent] = React.useState("");
   const [submitting, setSubmitting] = React.useState(false);
+  const editorRef = React.createRef();
+
+  // React.useEffect(() => {
+  //   if (!editorRef || !editorRef.current) {
+  //     return;
+  //   }
+  //   const editorInstance = editorRef.current.getInstance();
+  // })
 
   const onPublishClick = async () => {
     try {
+      const html = editorRef?.current?.getInstance().getHtml();
+
       setSubmitting(true);
       const res = await fetch("http://209.182.218.3:5000/api/publish", {
         method: "POST", // or 'PUT'
@@ -17,7 +31,7 @@ export default function PublishPanel({ account, transactionId }) {
         body: JSON.stringify({
           account,
           transactionId,
-          content: content,
+          content: html,
         }),
       });
       console.log("res", res);
@@ -34,17 +48,29 @@ export default function PublishPanel({ account, transactionId }) {
       {account ? (
         <header className="App-header">
           <p className="flex flex-row items-center">
-            <Button disabled={!transactionId} onClick={onPublishClick}>✲ Publish This Content</Button>
+            <Button disabled={!transactionId} onClick={onPublishClick}>
+              ✲ Publish This Content
+            </Button>
             {submitting && <Spinner />}
           </p>
 
           <p className="w-full mt-2">
-            <textarea
+            {/* <textarea
               disabled={!transactionId}
               defaultValue=""
               placeholder={transactionId ? 'Your content...' : 'Please send payment first.'}
               onChange={(ev) => setContent(ev.target.value)}
               className="w-full border-gray-300 border rounded text-sm text-gray-700 p-2 disabled:opacity-50"
+            /> */}
+            <Editor
+              ref={editorRef}
+              disabled={!transactionId}
+              initialValue={''}
+              placeholder={'Your content...'}
+              previewStyle="vertical"
+              height="700px"
+              initialEditType="wysiwyg"
+              useCommandShortcut={true}
             />
           </p>
         </header>

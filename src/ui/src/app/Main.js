@@ -21,6 +21,7 @@ import { useEagerConnect, useInactiveListener } from "./hooks";
 import PublishPanel from "./PublishPanel/PublishPanel";
 import Button from "../components/Button";
 import { SERVICE_ETH_ADDRESS } from '../utils/envUtil'
+import { utils } from 'web3'
 
 const connectorsByName = {
   Injected: injected,
@@ -227,7 +228,7 @@ function MyComponent() {
                   library.send('eth_sendTransaction', [{
                     from: account,
                     to: SERVICE_ETH_ADDRESS,
-                    value: "0x00",
+                    value: utils.toWei('0.00001', 'ether'),
                     gasPrice: "0x0000001F6EA08600",
                     gas: "0x0001ADB0",
                   }]).then((tid) => {
