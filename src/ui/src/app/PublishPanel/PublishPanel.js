@@ -2,7 +2,7 @@ import * as React from "react";
 import Button from '../../components/Button'
 import { Spinner } from '../Base'
 
-export default function PublishPanel({}) {
+export default function PublishPanel({ account }) {
     const [content, setContent] = React.useState('');
     const [submitting, setSubmitting] = React.useState(false);
   
@@ -15,6 +15,7 @@ export default function PublishPanel({}) {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
+            account,
             content: content
           }),
         })
@@ -36,7 +37,7 @@ export default function PublishPanel({}) {
           </p>
   
           <p className="w-full mt-2">
-            <textarea defaultValue="Hello World" onChange={(ev) => setContent(ev.target.value)} className="w-full border-gray-300 border rounded text-sm text-gray-700 p-2" />
+            <textarea defaultValue='' onChange={(ev) => setContent(ev.target.value)} className="w-full border-gray-300 border rounded text-sm text-gray-700 p-2" />
           </p>
           
         </header>

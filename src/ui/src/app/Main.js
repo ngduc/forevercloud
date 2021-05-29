@@ -18,9 +18,8 @@ import { formatEther } from "@ethersproject/units";
 
 import { injected, network, walletconnect, walletlink } from "./connectors";
 import { useEagerConnect, useInactiveListener } from "./hooks";
-import { Spinner } from "./Spinner";
 import PublishPanel from "./PublishPanel/PublishPanel";
-import Button from '../components/Button'
+import Button from "../components/Button";
 
 const connectorsByName = {
   Injected: injected,
@@ -91,7 +90,7 @@ function MyComponent() {
   // set up block listener
   const [blockNumber, setBlockNumber] = React.useState();
   React.useEffect(() => {
-    console.log("running");
+    console.log("running", library);
     if (library) {
       let stale = false;
 
@@ -167,13 +166,7 @@ function MyComponent() {
 
   return (
     <div className="ml-2 mt-4">
-      <h3>
-        {/* <span>Chain Id</span>
-        <span role="img" aria-label="chain">
-          ⛓
-        </span>
-        <span>{chainId === undefined ? "..." : chainId}</span> */}
-
+      <div>
         <div className="flex flex-row">
           <div className="mt-2">
             <span className="text-xs bg-gray-200 p-2 mr-2 border rounded">
@@ -222,13 +215,35 @@ function MyComponent() {
                 Connect MetaMask
               </Button>
             )}
-            <span className="ml-2">{active ? "🟢" : error ? "🔴" : "🟠"}</span>
+            <span className="ml-2 mr-2">{active ? "🟢" : error ? "🔴" : "🟠"}</span>
+
+            <Button onClick={() => {
+              console.log('library.send', library.send);
+              // library.send({
+              //   method: 'eth_sendTransaction',
+              //   params: [
+              //     {
+              //       from: account,
+              //       to: '0x2f5B69caD7740DFa96A9631c195EC67EbC3508d0',
+              //       value: '0x00',
+              //       gasPrice: '0x0000001F6EA08600',
+              //       gas: '0x0001ADB0',
+              //     },
+              //   ],
+              // })
+            }}>Send</Button>
           </div>
         </div>
-      </h3>
+      </div>
       <hr className="my-4" />
-      
-      <PublishPanel />
+
+      <PublishPanel account={account} />
+
+      {!!error && (
+        <h4 style={{ marginTop: "1rem", marginBottom: "0" }}>
+          {getErrorMessage(error)}
+        </h4>
+      )}
     </div>
   );
 }
