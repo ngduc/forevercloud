@@ -35,12 +35,6 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
-  ],
   "prettier": {
     "tabWidth": 2,
     "printWidth": 120,
@@ -48,12 +42,10 @@
     "trailingComma": "none",
     "parser": "typescript"
   },
-  "engines": {
-    "node" : ">=15.0.0"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "echo --- npm test"
-    }
-  }
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
 }
