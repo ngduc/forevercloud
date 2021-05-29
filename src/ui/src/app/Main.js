@@ -1,38 +1,34 @@
-import * as React from "react";
-import {
-  Web3ReactProvider,
-  useWeb3React,
-  UnsupportedChainIdError,
-} from "@web3-react/core";
+import * as React from 'react';
+import { Web3ReactProvider, useWeb3React, UnsupportedChainIdError } from '@web3-react/core';
 import {
   NoEthereumProviderError,
-  UserRejectedRequestError as UserRejectedRequestErrorInjected,
-} from "@web3-react/injected-connector";
+  UserRejectedRequestError as UserRejectedRequestErrorInjected
+} from '@web3-react/injected-connector';
 import {
   URI_AVAILABLE,
-  UserRejectedRequestError as UserRejectedRequestErrorWalletConnect,
-} from "@web3-react/walletconnect-connector";
-import { UserRejectedRequestError as UserRejectedRequestErrorFrame } from "@web3-react/frame-connector";
-import { Web3Provider } from "@ethersproject/providers";
-import { formatEther } from "@ethersproject/units";
+  UserRejectedRequestError as UserRejectedRequestErrorWalletConnect
+} from '@web3-react/walletconnect-connector';
+import { UserRejectedRequestError as UserRejectedRequestErrorFrame } from '@web3-react/frame-connector';
+import { Web3Provider } from '@ethersproject/providers';
+import { formatEther } from '@ethersproject/units';
 
-import { injected, network, walletconnect, walletlink } from "./connectors";
-import { useEagerConnect, useInactiveListener } from "./hooks";
-import PublishPanel from "./PublishPanel/PublishPanel";
-import Button from "../components/Button";
-import { SERVICE_ETH_ADDRESS } from '../utils/envUtil'
-import { utils } from 'web3'
+import { injected, network, walletconnect, walletlink } from './connectors';
+import { useEagerConnect, useInactiveListener } from './hooks';
+import PublishPanel from './PublishPanel/PublishPanel';
+import Button from '../components/Button';
+import { SERVICE_ETH_ADDRESS } from '../utils/envUtil';
+import { utils } from 'web3';
 
 const connectorsByName = {
   Injected: injected,
   Network: network,
   WalletConnect: walletconnect,
-  WalletLink: walletlink,
+  WalletLink: walletlink
 };
 
 function getErrorMessage(error) {
   if (error instanceof NoEthereumProviderError) {
-    return "No Ethereum browser extension detected, install MetaMask on desktop or visit from a dApp browser on mobile.";
+    return 'No Ethereum browser extension detected, install MetaMask on desktop or visit from a dApp browser on mobile.';
   } else if (error instanceof UnsupportedChainIdError) {
     return "You're connected to an unsupported network.";
   } else if (
@@ -40,10 +36,10 @@ function getErrorMessage(error) {
     error instanceof UserRejectedRequestErrorWalletConnect ||
     error instanceof UserRejectedRequestErrorFrame
   ) {
-    return "Please authorize this website to access your Ethereum account.";
+    return 'Please authorize this website to access your Ethereum account.';
   } else {
     console.error(error);
-    return "An unknown error occurred. Check the console for more details.";
+    return 'An unknown error occurred. Check the console for more details.';
   }
 }
 
@@ -64,21 +60,12 @@ export default function App() {
 function MyComponent() {
   const [transactionId, setTransactionId] = React.useState(''); // transaction Id after sending payment.
   const context = useWeb3React();
-  const {
-    connector,
-    library,
-    chainId,
-    account,
-    activate,
-    deactivate,
-    active,
-    error,
-  } = context;
+  const { connector, library, chainId, account, activate, deactivate, active, error } = context;
 
   // handle logic to recognize the connector currently being activated
   const [activatingConnector, setActivatingConnector] = React.useState();
   React.useEffect(() => {
-    console.log("running");
+    console.log('running');
     if (activatingConnector && activatingConnector === connector) {
       setActivatingConnector(undefined);
     }
@@ -93,11 +80,11 @@ function MyComponent() {
   // set up block listener
   const [blockNumber, setBlockNumber] = React.useState();
   React.useEffect(() => {
-    console.log("running", library);
+    console.log('running', library);
     if (library) {
       let stale = false;
 
-      console.log("fetching block number!!");
+      console.log('fetching block number!!');
       library
         .getBlockNumber()
         .then((blockNumber) => {
@@ -114,10 +101,10 @@ function MyComponent() {
       const updateBlockNumber = (blockNumber) => {
         setBlockNumber(blockNumber);
       };
-      library.on("block", updateBlockNumber);
+      library.on('block', updateBlockNumber);
 
       return () => {
-        library.removeListener("block", updateBlockNumber);
+        library.removeListener('block', updateBlockNumber);
         stale = true;
         setBlockNumber(undefined);
       };
@@ -127,7 +114,7 @@ function MyComponent() {
   // fetch eth balance of the connected account
   const [ethBalance, setEthBalance] = React.useState();
   React.useEffect(() => {
-    console.log("running");
+    console.log('running');
     if (library && account) {
       let stale = false;
 
@@ -153,9 +140,9 @@ function MyComponent() {
 
   // log the walletconnect URI
   React.useEffect(() => {
-    console.log("running");
+    console.log('running');
     const logURI = (uri) => {
-      console.log("WalletConnect URI", uri);
+      console.log('WalletConnect URI', uri);
     };
     walletconnect.on(URI_AVAILABLE, logURI);
 
@@ -164,7 +151,7 @@ function MyComponent() {
     };
   }, []);
 
-  const injectedConnector = connectorsByName["Injected"];
+  const injectedConnector = connectorsByName['Injected'];
   const walletConnected = injectedConnector === connector;
 
   return (
@@ -172,28 +159,22 @@ function MyComponent() {
       <div>
         <div className="flex flex-row">
           <div className="mt-2">
-            <span className="text-xs bg-gray-200 p-2 mr-2 border rounded">
-              Account
-            </span>
+            <span className="text-xs bg-gray-200 p-2 mr-2 border rounded">Account</span>
             <span>
               {account === undefined
-                ? " N/A"
+                ? ' N/A'
                 : account === null
-                ? "None"
-                : `${account.substring(0, 6)}...${account.substring(
-                    account.length - 4
-                  )}`}
+                ? 'None'
+                : `${account.substring(0, 6)}...${account.substring(account.length - 4)}`}
             </span>
           </div>
           <div className="ml-4 mt-2">
-            <span className="text-xs bg-gray-200 p-2 mr-2 border rounded">
-              Balance
-            </span>
+            <span className="text-xs bg-gray-200 p-2 mr-2 border rounded">Balance</span>
             <span>
               {ethBalance === undefined
-                ? " N/A"
+                ? ' N/A'
                 : ethBalance === null
-                ? "Error"
+                ? 'Error'
                 : `Ξ ${parseFloat(formatEther(ethBalance)).toPrecision(4)}`}
             </span>
           </div>
@@ -210,7 +191,7 @@ function MyComponent() {
             ) : (
               <Button
                 onClick={() => {
-                  const connector = connectorsByName["Injected"];
+                  const connector = connectorsByName['Injected'];
                   setActivatingConnector(connector);
                   activate(connector);
                 }}
@@ -218,28 +199,29 @@ function MyComponent() {
                 Connect MetaMask
               </Button>
             )}
-            <span className="ml-2 mr-2">
-              {active ? "🟢" : error ? "🔴" : "🟠"}
-            </span>
+            <span className="ml-2 mr-2">{active ? '🟢' : error ? '🔴' : '🟠'}</span>
 
             {walletConnected && (
               <Button
                 onClick={() => {
-                  library.send('eth_sendTransaction', [{
-                    from: account,
-                    to: SERVICE_ETH_ADDRESS,
-                    value: '0x00', // utils.toWei('0.00001', 'ether'),
-                    gasPrice: "0x0000001F6EA08600",
-                    gas: "0x0001ADB0",
-                  }]).then((tid) => {
-                    setTransactionId(tid);
-                  });
+                  library
+                    .send('eth_sendTransaction', [
+                      {
+                        from: account,
+                        to: SERVICE_ETH_ADDRESS,
+                        value: '0x00', // utils.toWei('0.00001', 'ether'),
+                        gasPrice: '0x0000001F6EA08600',
+                        gas: '0x0001ADB0'
+                      }
+                    ])
+                    .then((tid) => {
+                      setTransactionId(tid);
+                    });
                 }}
               >
                 ➤ Send Payment
               </Button>
             )}
-            
           </div>
         </div>
       </div>
@@ -247,11 +229,7 @@ function MyComponent() {
 
       <PublishPanel account={account} transactionId={transactionId} />
 
-      {!!error && (
-        <h4 style={{ marginTop: "1rem", marginBottom: "0" }}>
-          {getErrorMessage(error)}
-        </h4>
-      )}
+      {!!error && <h4 style={{ marginTop: '1rem', marginBottom: '0' }}>{getErrorMessage(error)}</h4>}
     </div>
   );
 }

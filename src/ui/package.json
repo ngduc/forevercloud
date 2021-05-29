@@ -40,5 +40,21 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "prettier": {
+    "tabWidth": 2,
+    "printWidth": 120,
+    "singleQuote": true,
+    "trailingComma": "none",
+    "parser": "typescript"
+  },
+  "engines": {
+    "node" : ">=15.0.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "echo --- npm test"
+    }
+  }
+  
 }

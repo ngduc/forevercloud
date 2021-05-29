@@ -1,9 +1,9 @@
-import * as React from "react";
-import Button from "../../components/Button";
-import { Spinner } from "../../components/Base";
+import * as React from 'react';
+import Button from '../../components/Button';
+import { Spinner } from '../../components/Base';
 
 export default ({ importHandler }) => {
-  const [url, setUrl] = React.useState("");
+  const [url, setUrl] = React.useState('');
   const [submitting, setSubmitting] = React.useState(false);
   return (
     <div className="flex flex-row items-center">
@@ -17,22 +17,22 @@ export default ({ importHandler }) => {
       />
       <Button
         onClick={async () => {
-            setSubmitting(true);
-          const res = await fetch("http://209.182.218.3:5000/api/import", {
-            method: "POST", // or 'PUT'
+          setSubmitting(true);
+          const res = await fetch('http://209.182.218.3:5000/api/import', {
+            method: 'POST', // or 'PUT'
             headers: {
-              "Content-Type": "application/json",
+              'Content-Type': 'application/json'
             },
             body: JSON.stringify({
               url
-            }),
+            })
           });
           const { html } = await res.json();
-          console.log('res', res)
+          console.log('res', res);
           setSubmitting(false);
 
           if (importHandler && html) {
-            importHandler(html)
+            importHandler(html);
           }
         }}
       >

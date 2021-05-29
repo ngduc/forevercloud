@@ -1,14 +1,14 @@
-import * as React from "react";
-import Button from "../../components/Button";
-import { Spinner } from "../../components/Base";
-import WebImport from './WebImport'
+import * as React from 'react';
+import Button from '../../components/Button';
+import { Spinner } from '../../components/Base';
+import WebImport from './WebImport';
 
-import { Editor } from "@toast-ui/react-editor";
+import { Editor } from '@toast-ui/react-editor';
 import 'codemirror/lib/codemirror.css';
-import "@toast-ui/editor/dist/toastui-editor.css";
+import '@toast-ui/editor/dist/toastui-editor.css';
 
 export default function PublishPanel({ account, transactionId }) {
-  const [content, setContent] = React.useState("");
+  const [content, setContent] = React.useState('');
   const [submitting, setSubmitting] = React.useState(false);
   const [importing, setImporting] = React.useState(false);
   const editorRef = React.createRef();
@@ -25,21 +25,21 @@ export default function PublishPanel({ account, transactionId }) {
       const html = editorRef?.current?.getInstance().getHtml();
 
       setSubmitting(true);
-      const res = await fetch("http://209.182.218.3:5000/api/publish", {
-        method: "POST", // or 'PUT'
+      const res = await fetch('http://209.182.218.3:5000/api/publish', {
+        method: 'POST', // or 'PUT'
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({
           account,
           transactionId,
-          content: html,
-        }),
+          content: html
+        })
       });
-      console.log("res", res);
-      alert("Response: ", JSON.stringify(res));
+      console.log('res', res);
+      alert('Response: ', JSON.stringify(res));
     } catch (err) {
-      alert("Unable to post data. ", JSON.stringify(err));
+      alert('Unable to post data. ', JSON.stringify(err));
     }
     setSubmitting(false);
   };
@@ -57,10 +57,12 @@ export default function PublishPanel({ account, transactionId }) {
 
             <div>
               {importing ? (
-                <WebImport importHandler={(html) => {
-                  const editorInstance = editorRef.current.getInstance();
-                  editorInstance.setHtml(html);
-                }} />
+                <WebImport
+                  importHandler={(html) => {
+                    const editorInstance = editorRef.current.getInstance();
+                    editorInstance.setHtml(html);
+                  }}
+                />
               ) : (
                 <Button onClick={() => setImporting(true)}>Import From URL</Button>
               )}
