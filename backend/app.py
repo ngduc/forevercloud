@@ -4,12 +4,14 @@ import logging
 
 import libs
 
-from flask import Flask, render_template, url_for, redirect, jsonify, request, Response, render_template
+from flask import Flask, render_template, url_for, redirect, jsonify, request, Response, render_template, send_from_directory
+from flask_cors import CORS
 
 app = Flask(__name__, 
             static_url_path='', 
             static_folder='static',
             template_folder='templates')
+CORS(app)
 
 logging.basicConfig(filename='/tmp/app.log', level=logging.DEBUG)
 
@@ -19,7 +21,7 @@ def about():
 
 @app.route('/')
 def index():
-    return redirect('/index.html')
+    return send_from_directory('static', 'index.html')
     
 @app.route('/api/publish', methods=['POST', 'PUT'])
 def publish():  
@@ -92,13 +94,13 @@ def publish():
         app.logger.error('exception not handled', exc_info=True)
         return jsonify(dict(status='error', error='exception not handled'))
 
-@app.route('/retrieve', methods=['GET'])
-def retrieve():
+@app.route('/page/<key>', methods=['GET'])
+def retrieve(key):
     try:
         r = Response(response="", status=200, mimetype="application/xml")
         r.headers["Content-Type"] = "text/html; charset=utf-8"
 
-        key = request.args.get('key')
+        #key = request.args.get('key')
         if not key:
             #return jsonify(dict(status='error', error='no key provided'))
             r.data='Error: No key provided'

@@ -118,3 +118,5 @@ def request_url_embeded(url):
         return data.get('msg'), None
     return None, data
     
+
+    
