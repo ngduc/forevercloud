@@ -61,6 +61,7 @@ export default function App() {
 }
 
 function MyComponent() {
+  const [transactionId, setTransactionId] = React.useState(''); // transaction Id after sending payment.
   const context = useWeb3React();
   const {
     connector,
@@ -220,26 +221,30 @@ function MyComponent() {
               {active ? "🟢" : error ? "🔴" : "🟠"}
             </span>
 
-            <Button
-              onClick={() => {
-                console.log("library.send", library.send);
-                library.send('eth_sendTransaction', [{
-                  from: account,
-                  to: SERVICE_ETH_ADDRESS,
-                  value: "0x00",
-                  gasPrice: "0x0000001F6EA08600",
-                  gas: "0x0001ADB0",
-                }]);
-              }}
-            >
-              Send
-            </Button>
+            {walletConnected && (
+              <Button
+                onClick={() => {
+                  library.send('eth_sendTransaction', [{
+                    from: account,
+                    to: SERVICE_ETH_ADDRESS,
+                    value: "0x00",
+                    gasPrice: "0x0000001F6EA08600",
+                    gas: "0x0001ADB0",
+                  }]).then((tid) => {
+                    setTransactionId(tid);
+                  });
+                }}
+              >
+                Send Payment
+              </Button>
+            )}
+            
           </div>
         </div>
       </div>
       <hr className="my-4" />
 
-      <PublishPanel account={account} />
+      <PublishPanel account={account} transactionId={transactionId} />
 
       {!!error && (
         <h4 style={{ marginTop: "1rem", marginBottom: "0" }}>

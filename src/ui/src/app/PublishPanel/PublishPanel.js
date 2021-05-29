@@ -2,7 +2,7 @@ import * as React from "react";
 import Button from '../../components/Button'
 import { Spinner } from '../Base'
 
-export default function PublishPanel({ account }) {
+export default function PublishPanel({ account, transactionId }) {
     const [content, setContent] = React.useState('');
     const [submitting, setSubmitting] = React.useState(false);
   
@@ -16,6 +16,7 @@ export default function PublishPanel({ account }) {
           },
           body: JSON.stringify({
             account,
+            transactionId,
             content: content
           }),
         })
