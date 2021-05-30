@@ -6,7 +6,8 @@ ForeverCloud
 
 ### Todo
 
-- [ ] 🐞 Bug: Type something, then import content  
+- [ ] 🐞 Bug: Type something, then import content
+- [ ] Create a Marketing or Landing page
 
 ### In Progress
 

@@ -148,7 +148,7 @@ export default function PublishPanel({ account, transactionId, onPayClick }) {
         <div>
           <input
             className="border border-gray-200 p-2 w-1/3"
-            value={`${window.location.href}page/${publishedData?.key}/${slugifyTitle(title)}`}
+            value={`${window.location.href}page/${publishedData?.key}${title ? '/' + slugifyTitle(title) : ''}`}
           />
           <input className="border border-gray-200 p-2 w-1/3 ml-2" value={publishedData?.url} />
         </div>
