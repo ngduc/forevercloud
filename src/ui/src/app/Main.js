@@ -173,9 +173,9 @@ function MyComponent() {
     <div className="ml-2 mt-4">
       <div>
         <div className="flex flex-row justify-between">
-          <div className="w-100">
-            <img src="logo-text.png" style={{ height: 64 }} />
-          </div>
+          <a className="w-100" href="/">
+            <img src="logo-text.png" alt="Logo" style={{ height: 64 }} />
+          </a>
 
           <div className="flex flex-row">
             <div className="mt-2">
