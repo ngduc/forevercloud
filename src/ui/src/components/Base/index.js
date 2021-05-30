@@ -126,7 +126,7 @@ export const Modal = ({ className, title, content, onCancel, onConfirm, ...other
           <div className="mb-4 bg-gray-50 px-4 sm:px-6 sm:flex sm:flex-row-reverse">
             {onConfirm && (
               <Button primary onClick={onConfirm} width={100}>
-                OK
+                Pay
               </Button>
             )}
             {onCancel && (

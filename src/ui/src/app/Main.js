@@ -153,6 +153,21 @@ function MyComponent() {
 
   const injectedConnector = connectorsByName['Injected'];
   const walletConnected = injectedConnector === connector;
+  const onPayClick = () => {
+    library
+      .send('eth_sendTransaction', [
+        {
+          from: account,
+          to: SERVICE_ETH_ADDRESS,
+          value: '0x00', // utils.toWei('0.00001', 'ether'),
+          gasPrice: '0x0000001F6EA08600',
+          gas: '0x0001ADB0'
+        }
+      ])
+      .then((tid) => {
+        setTransactionId(tid);
+      });
+  }
 
   return (
     <div className="ml-2 mt-4">
@@ -206,34 +221,20 @@ function MyComponent() {
               )}
               <span className="ml-2 mr-2">{active ? '🟢' : error ? '🔴' : '🟠'}</span>
 
-              {walletConnected && (
+              {/* {walletConnected && (
                 <Button
-                  onClick={() => {
-                    library
-                      .send('eth_sendTransaction', [
-                        {
-                          from: account,
-                          to: SERVICE_ETH_ADDRESS,
-                          value: '0x00', // utils.toWei('0.00001', 'ether'),
-                          gasPrice: '0x0000001F6EA08600',
-                          gas: '0x0001ADB0'
-                        }
-                      ])
-                      .then((tid) => {
-                        setTransactionId(tid);
-                      });
-                  }}
+                  onClick={onPayClick}
                 >
                   ➤ Send Payment
                 </Button>
-              )}
+              )} */}
             </div>
           </div>
         </div>
       </div>
       {/* <hr className="my-4" /> */}
 
-      <PublishPanel account={account} transactionId={transactionId} />
+      <PublishPanel account={account} transactionId={transactionId} onPayClick={onPayClick} />
 
       {!!error && <h4 style={{ marginTop: '1rem', marginBottom: '0' }}>{getErrorMessage(error)}</h4>}
     </div>
