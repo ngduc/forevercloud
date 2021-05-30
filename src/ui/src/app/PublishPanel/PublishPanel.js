@@ -150,10 +150,10 @@ export default function PublishPanel({ account, transactionId, onPayClick }) {
       {publishedData && (
         <div className="flex flex-row items-center">
           <input
-            className="border border-gray-200 p-2 w-1/3"
+            className="text-sm border border-gray-200 p-2 w-1/3"
             value={publishedUrl}
           />
-          <input className="border border-gray-200 p-2 w-1/3 ml-2" value={publishedData?.url} />
+          <input className="text-sm border border-gray-200 p-2 w-1/3 ml-2" value={publishedData?.url} />
 
           <TwitterShareButton className="ml-2" url={publishedUrl} title={`${title ? title : 'Article published at' } ${publishedUrl}`}>
             <TwitterIcon size={32} round={true} />

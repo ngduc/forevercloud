@@ -180,7 +180,7 @@ function MyComponent() {
           <div className="flex flex-row">
             <div className="mt-2">
               <span className="text-xs bg-gray-200 p-2 mr-2 border rounded">Account</span>
-              <span>
+              <span className="text-sm">
                 {account === undefined
                   ? ' N/A'
                   : account === null
@@ -190,7 +190,7 @@ function MyComponent() {
             </div>
             <div className="ml-4 mt-2">
               <span className="text-xs bg-gray-200 p-2 mr-2 border rounded">Balance</span>
-              <span>
+              <span className="text-sm">
                 {ethBalance === undefined
                   ? ' N/A'
                   : ethBalance === null
