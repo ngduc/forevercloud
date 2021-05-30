@@ -8,8 +8,26 @@ import { Editor } from '@toast-ui/react-editor';
 import 'codemirror/lib/codemirror.css';
 import '@toast-ui/editor/dist/toastui-editor.css';
 
+export function slugifyTitle(title = '') {
+  const a = 'àáâäæãåāăąçćčđďèéêëēėęěğǵḧîïíīįìłḿñńǹňôöòóœøōõőṕŕřßśšşșťțûüùúūǘůűųẃẍÿýžźż·/_,:;';
+  const b = 'aaaaaaaaaacccddeeeeeeeegghiiiiiilmnnnnoooooooooprrsssssttuuuuuuuuuwxyyzzz------';
+  const p = new RegExp(a.split('').join('|'), 'g');
+
+  return title
+    .toString()
+    .toLowerCase()
+    .replace(/\s+/g, '-') // Replace spaces with -
+    .replace(p, (c) => b.charAt(a.indexOf(c))) // Replace special characters
+    .replace(/&/g, '-and-') // Replace & with 'and'
+    .replace(/[^\w-]+/g, '') // Remove all non-word characters
+    .replace(/--+/g, '-') // Replace multiple - with single -
+    .replace(/^-+/, '') // Trim - from start of text
+    .replace(/-+$/, ''); // Trim - from end of text
+}
+
 export default function PublishPanel({ account, transactionId, onPayClick }) {
   const [content, setContent] = React.useState('');
+  const [title, setTitle] = React.useState('');
   const [submitting, setSubmitting] = React.useState(false);
   const [importing, setImporting] = React.useState(false);
   const [publishedData, setPublishedData] = React.useState(null);
@@ -57,6 +75,11 @@ export default function PublishPanel({ account, transactionId, onPayClick }) {
       {account ? (
         <header className="App-header">
           <div className="w-full mt-2">
+            <input
+              onChange={(ev) => setTitle(ev.target.value)}
+              placeholder="Title"
+              className="w-full border border-b-0 border-gray-300 p-1 px-2 text-sm"
+            />
             {/* <textarea
               disabled={!transactionId}
               defaultValue=""
@@ -70,7 +93,7 @@ export default function PublishPanel({ account, transactionId, onPayClick }) {
               initialValue={''}
               placeholder={'Your content...'}
               previewStyle="vertical"
-              height="calc(100vh - 200px)"
+              height="calc(100vh - 210px)"
               initialEditType="wysiwyg"
               useCommandShortcut={true}
             />
@@ -89,21 +112,21 @@ export default function PublishPanel({ account, transactionId, onPayClick }) {
         <div className="mt-2 flex flex-row items-center justify-between">
           {transactionId ? (
             <>
-              <Button disabled={submitting} onClick={onPublishClick}>{submitting ? 'Publishing...' : 'Confirm Publish'}</Button>
+              <Button disabled={submitting} onClick={onPublishClick}>
+                {submitting ? 'Publishing...' : 'Confirm Publish'}
+              </Button>
               {submitting && <Spinner />}
 
               {!publishedData && !submitting ? (
                 <span className="text-blue-500">Payment sent. Please click Confirm to Publish.</span>
               ) : null}
 
-              {publishedData && (
-                <span className="text-blue-500">Published successfully to the following links:</span>
-              )}              
+              {publishedData && <span className="text-blue-500">Published successfully to the following links:</span>}
             </>
           ) : (
             <Button onClick={() => setPublishModalShowed(true)}>✲ Publish This Content</Button>
           )}
-          
+
           <div>
             {importing ? (
               <WebImport
@@ -125,7 +148,7 @@ export default function PublishPanel({ account, transactionId, onPayClick }) {
         <div>
           <input
             className="border border-gray-200 p-2 w-1/3"
-            value={`${window.location.href}page/${publishedData?.key}`}
+            value={`${window.location.href}page/${publishedData?.key}/${slugifyTitle(title)}`}
           />
           <input className="border border-gray-200 p-2 w-1/3 ml-2" value={publishedData?.url} />
         </div>
