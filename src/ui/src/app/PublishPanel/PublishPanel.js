@@ -164,7 +164,11 @@ export default function PublishPanel({ account, transactionId, onPayClick }) {
       {publishModalShowed === true ? (
         <Modal
           title="Publish"
-          content={<p>Content will be published to the Distributed Network after the payment is confirmed.</p>}
+          content={<div>
+            <p>Content will be published to the Distributed Network after the payment is confirmed.</p>
+            <p>&nbsp;</p>
+            <p>At this time, please pay with Rinkeby Test Net as this is not tested or ready with the Main Net.</p>
+            </div>}
           onCancel={() => setPublishModalShowed(false)}
           onConfirm={() => {
             setPublishModalShowed(false);
