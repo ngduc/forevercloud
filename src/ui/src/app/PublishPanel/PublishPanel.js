@@ -89,7 +89,7 @@ export default function PublishPanel({ account, transactionId, onPayClick }) {
         <div className="mt-2 flex flex-row items-center justify-between">
           {transactionId ? (
             <>
-              <Button disabled={submitting} onClick={onPublishClick}>Confirm Publish</Button>
+              <Button disabled={submitting} onClick={onPublishClick}>{submitting ? 'Publishing...' : 'Confirm Publish'}</Button>
               {submitting && <Spinner />}
 
               {!publishedData && !submitting ? (
